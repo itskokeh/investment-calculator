@@ -8,19 +8,22 @@ const interestEarnedSpan = document.getElementById('interestEarned') as HTMLSpan
 
 // Investment calculation function
 function calculateInvestment(
-    initialAmount: number,
+    principal: number,
     annualRate: number,
-    days: number,
-): { futureValue: number; interestEarned: number } {
-    const annualReturn = initialAmount * (annualRate / 100)
-    const dailyRate = annualReturn / 365;
+    months: number,
+){
+    const monthlyRate = (annualRate / 12)
+    let balance = principal;
+
+    for (let i = 0; i < months; i++) {
+        const interest = balance * monthlyRate;
+        balance += interest
+    }
     
-    const futureValue = initialAmount + (dailyRate * days)
-    const interestEarned = futureValue - initialAmount
+    balance = parseFloat(balance.toFixed(2))
     
     return {
-        futureValue: parseFloat(futureValue.toFixed(2)),
-        interestEarned: parseFloat(interestEarned.toFixed(2))
+        balance,
     };
 }
 
@@ -40,6 +43,6 @@ calculateBtn.addEventListener('click', () => {
     // Calculate and display results
     const result = calculateInvestment(initialAmount, annualRate, days);
     
-    futureValueSpan.textContent = `₦${result.futureValue.toLocaleString()}`;
-    interestEarnedSpan.textContent = `₦${result.interestEarned.toLocaleString()}`;
+    // futureValueSpan.textContent = `₦${result.futureValue.toLocaleString()}`;
+    interestEarnedSpan.textContent = `₦${result.balance.toLocaleString()}`;
 });
